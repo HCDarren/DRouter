@@ -14,5 +14,5 @@ import java.util.Map;
  */
 public interface IRouterAction {
     // 执行方法
-    RouterResult invoke(Context context, Map<String, Object> requestData);
+    RouterResult connect(Context context, Map<String, Object> requestData);
 }

@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import dalvik.system.DexFile;
 
 /**
- * description:
+ * description: 感谢阿里开源库 ARouter
  * author: Darren on 2018/1/23 09:24
  * email: 240336124@qq.com
  * version: 1.0
@@ -38,10 +38,6 @@ public class ClassUtils {
 
     /**
      * 通过指定包名，扫描包下面包含的所有的ClassName
-     *
-     * @param context     U know
-     * @param packageName 包名
-     * @return 所有class的集合
      */
     public static List<String> getFileNameByPackageName(Context context, String packageName) throws PackageManager.NameNotFoundException, IOException {
         List<String> classNames = new ArrayList<>();
@@ -84,8 +80,6 @@ public class ClassUtils {
         //the prefix of extracted file, ie: test.classes
         String extractedFilePrefix = sourceApk.getName() + EXTRACTED_NAME_EXT;
 
-//        如果VM已经支持了MultiDex，就不要去Secondary Folder加载 Classesx.zip了，那里已经么有了
-//        通过是否存在sp中的multidex.version是不准确的，因为从低版本升级上来的用户，是包含这个sp配置的
         if (!isVMMultidexCapable()) {
             //the total dex numbers
             int totalDexNumber = getMultiDexPreferences(context).getInt(KEY_DEX_NUMBER, 1);
@@ -118,10 +112,10 @@ public class ClassUtils {
         String vmName = null;
 
         try {
-            if (isYunOS()) {    // YunOS需要特殊判断
+            if (isYunOS()) {
                 vmName = "'YunOS'";
                 isMultidexCapable = Integer.valueOf(System.getProperty("ro.build.version.sdk")) >= 21;
-            } else {    // 非YunOS原生Android
+            } else {
                 vmName = "'Android'";
                 String versionString = System.getProperty("java.vm.version");
                 if (versionString != null) {
@@ -142,8 +136,6 @@ public class ClassUtils {
         } catch (Exception ignore) {
 
         }
-
-        Log.i("galaxy", "VM with name " + vmName + (isMultidexCapable ? " has multidex support" : " does not have multidex support"));
         return isMultidexCapable;
     }
 

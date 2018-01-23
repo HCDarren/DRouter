@@ -21,7 +21,7 @@ import java.util.Map;
 public class LoginAction implements IRouterAction {
 
     @Override
-    public RouterResult invoke(Context context, Map<String, Object> requestData) {
+    public RouterResult connect(Context context, Map<String, Object> requestData) {
         Log.e("TAG", "LoginAction 方法执行了");
         Intent intent = new Intent(context, LoginActivity.class);
         intent.putExtra("key", (String) requestData.get("key"));

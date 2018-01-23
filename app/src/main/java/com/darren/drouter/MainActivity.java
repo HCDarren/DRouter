@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                RouterResult routerResult = DRouter.getInstance().action("login/action").context(MainActivity.this).param("key", "value").invoke();
+                RouterResult routerResult = DRouter.getInstance().action("login/action").context(MainActivity.this).param("key", "value").connect();
             }
         }.start();
     }

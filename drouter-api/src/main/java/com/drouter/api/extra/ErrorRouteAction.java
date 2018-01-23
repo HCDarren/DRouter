@@ -16,7 +16,7 @@ import java.util.Map;
 public class ErrorRouteAction implements IRouterAction {
 
     @Override
-    public RouterResult invoke(Context context, Map<String, Object> requestData) {
+    public RouterResult connect(Context context, Map<String, Object> requestData) {
         return new RouterResult(RouterResult.ERROR_CODE);
     }
 }

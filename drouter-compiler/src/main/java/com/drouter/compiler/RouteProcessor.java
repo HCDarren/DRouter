@@ -79,11 +79,6 @@ public class RouteProcessor extends AbstractProcessor {
 
         for (Element element : elements) {
 
-            // 是否继承了
-            if (!verify(element)) {
-                error(element,"xxxxx");
-            }
-
             // 获取注解上面的 moduleName
             Action actionAnnotation = element.getAnnotation(Action.class);
             String actionName = actionAnnotation.path();
@@ -174,16 +169,6 @@ public class RouteProcessor extends AbstractProcessor {
         }
 
         processingEnv.getMessager().printMessage(kind, message, element);
-    }
-
-    private boolean verify(Element element) {
-        Action action = element.getAnnotation(Action.class);
-        try {
-            return null != action && ((TypeElement) element).getInterfaces().contains(Class.forName("com.drouter.api.action.IRouterAction"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
 

@@ -24,8 +24,8 @@ public class RouterForward {
         mParams = new HashMap<>();
     }
 
-    public RouterResult invoke() {
-        return mRouterAction.invoke(mContext, mParams);
+    public RouterResult connect() {
+        return mRouterAction.connect(mContext, mParams);
     }
 
     public RouterForward context(Context context) {
