@@ -118,7 +118,7 @@ public class RouteProcessor extends AbstractProcessor {
             String packageName = mElementUtils.getPackageOf(enclosingElement).getQualifiedName().toString();
             String actionClassName = packageName + "." + element.getSimpleName();
 
-            if (modules.containsKey(moduleName)) {
+            if (modules.containsKey(actionName)) {
                 // 输出错误，Action 名称冲突重复了
                 error(element, "%s module name already exists", actionName);
             }
