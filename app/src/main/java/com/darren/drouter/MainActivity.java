@@ -22,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void click(View view) {
-        RouterResult routerResult = DRouter.getInstance().action("login/action").context(MainActivity.this).param("key", "value").connect();
+
+        RouterResult routerResult = DRouter.getInstance().action("login/action").context(MainActivity.this).param("key", "value").invokeAction();
+
+
     }
 }

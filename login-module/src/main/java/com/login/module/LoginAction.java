@@ -1,13 +1,12 @@
 package com.login.module;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
-import com.drouter.base.ThreadMode;
-import com.drouter.base.annotation.Action;
 import com.drouter.api.action.IRouterAction;
 import com.drouter.api.result.RouterResult;
+import com.drouter.base.ThreadMode;
+import com.drouter.base.annotation.Action;
 
 import java.util.Map;
 
@@ -17,15 +16,22 @@ import java.util.Map;
  * email: 240336124@qq.com
  * version: 1.0
  */
-@Action(path = "login/action", threadMode = ThreadMode.MAIN)
+@Action(path = "login/action", threadMode = ThreadMode.POSTING)
 public class LoginAction implements IRouterAction {
 
     @Override
-    public RouterResult connect(Context context, Map<String, Object> requestData) {
-        Log.e("TAG", "LoginAction 方法执行了");
-        Intent intent = new Intent(context, LoginActivity.class);
-        intent.putExtra("key", (String) requestData.get("key"));
-        context.startActivity(intent);
+    public RouterResult invokeAction(Context context, Map<String, Object> requestData) {
+        try {
+            int i = 0;
+            while (i < 100) {
+                Thread.sleep(100);
+
+                Log.e(Thread.currentThread().getName(), "i = " + i);
+                i++;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return new RouterResult(RouterResult.SUCCEED_CODE);
     }
 }

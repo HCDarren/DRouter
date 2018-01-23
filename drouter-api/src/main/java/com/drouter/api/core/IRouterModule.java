@@ -1,5 +1,7 @@
 package com.drouter.api.core;
 
+import com.drouter.api.extra.ActionWrapper;
+
 /**
  * description:
  * author: Darren on 2018/1/22 11:08
@@ -7,5 +9,5 @@ package com.drouter.api.core;
  * version: 1.0
  */
 public interface IRouterModule {
-    String findActionClassName(String actionName);
+    ActionWrapper findAction(String actionName);
 }

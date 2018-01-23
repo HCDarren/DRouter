@@ -19,7 +19,7 @@ import java.util.Map;
 @Action(path = "circlemodule/test", threadMode = ThreadMode.MAIN)
 public class LoginAction implements IRouterAction {
     @Override
-    public RouterResult connect(Context context, Map<String, Object> requestData) {
+    public RouterResult invokeAction(Context context, Map<String, Object> requestData) {
         Log.e("TAG", "CIRCLE LoginAction 方法执行了");
         return null;
     }

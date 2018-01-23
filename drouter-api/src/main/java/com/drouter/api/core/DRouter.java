@@ -8,9 +8,10 @@ import android.widget.Toast;
 
 import com.drouter.api.action.IRouterAction;
 import com.drouter.api.exception.InitException;
+import com.drouter.api.extra.ActionWrapper;
 import com.drouter.api.extra.Consts;
 import com.drouter.api.extra.DefaultLogger;
-import com.drouter.api.extra.ErrorRouteAction;
+import com.drouter.api.extra.ErrorActionWrapper;
 import com.drouter.api.extra.ILogger;
 import com.drouter.api.utils.ClassUtils;
 
@@ -33,7 +34,7 @@ public class DRouter {
     // 日志打印
     public volatile static ILogger logger = new DefaultLogger();
     // 缓存的 RouterAction
-    private volatile static Map<String, IRouterAction> cacheRouterActions = new HashMap();
+    private volatile static Map<String, ActionWrapper> cacheRouterActions = new HashMap();
     // 缓存的 RouterModule
     private volatile static Map<String, IRouterModule> cacheRouterModules = new HashMap();
     // 所有 moudle
@@ -105,7 +106,7 @@ public class DRouter {
         if (!actionName.contains("/")) {
             String message = "action name  format error -> " + actionName + ", like: moduleName/actionName";
             debugMessage(message);
-            return new RouterForward(new ErrorRouteAction());
+            return new RouterForward(new ErrorActionWrapper());
         }
 
         // 2.获取 moduleName，实例化 Module，并缓存
@@ -114,7 +115,7 @@ public class DRouter {
         if (TextUtils.isEmpty(moduleClassName)) {
             String message = "module find error";
             debugMessage(message);
-            return new RouterForward(new ErrorRouteAction());
+            return new RouterForward(new ErrorActionWrapper());
         }
         IRouterModule routerModule = cacheRouterModules.get(moduleClassName);
         if (routerModule == null) {
@@ -126,41 +127,45 @@ public class DRouter {
                 e.printStackTrace();
                 String message = "instance module error: " + e.getMessage();
                 debugMessage(message);
-                return new RouterForward(new ErrorRouteAction());
+                return new RouterForward(new ErrorActionWrapper());
             }
         }
 
-        // 3. 从 Module 中获取 Action 类名，然后创建缓存 Action
-        String actionClassName = routerModule.findActionClassName(actionName);
-        if (TextUtils.isEmpty(actionClassName)) {
+        // 3. 从 Module 中获取 ActionWrapper 类名，然后创建缓存 ActionWrapper
+        ActionWrapper actionWrapper = cacheRouterActions.get(actionName);
+        if (actionWrapper == null) {
+            actionWrapper = routerModule.findAction(actionName);
+        }
+        if (actionWrapper == null) {
             if (debuggable) {
                 String message = String.format("According to the %s action name cannot find action.", actionName);
                 logger.e(Consts.TAG, message);
                 showToast(message);
             }
-            return new RouterForward(new ErrorRouteAction());
+            return new RouterForward(new ErrorActionWrapper());
         }
-        IRouterAction routerAction = cacheRouterActions.get(actionClassName);
+
+        Class<? extends IRouterAction> actionClass = actionWrapper.getActionClass();
+        IRouterAction routerAction = actionWrapper.getRouterAction();
         if (routerAction == null) {
             try {
-                Class<? extends IRouterAction> actionClass = (Class<? extends IRouterAction>) Class.forName(actionClassName);
-
                 if (!IRouterAction.class.isAssignableFrom(actionClass)) {
-                    String message = actionClassName + " must be implements IRouterAction.";
+                    String message = actionClass.getCanonicalName() + " must be implements IRouterAction.";
                     debugMessage(message);
-                    return new RouterForward(new ErrorRouteAction());
+                    return new RouterForward(new ErrorActionWrapper());
                 }
-
+                // 创建 RouterAction 实例，并缓存起来
                 routerAction = actionClass.newInstance();
-                cacheRouterActions.put(actionClassName, routerAction);
+                actionWrapper.setRouterAction(routerAction);
+                cacheRouterActions.put(actionName, actionWrapper);
             } catch (Exception e) {
                 String message = "instance action error: " + e.getMessage();
                 debugMessage(message);
-                return new RouterForward(new ErrorRouteAction());
+                return new RouterForward(new ErrorActionWrapper());
             }
         }
 
-        return new RouterForward(routerAction);
+        return new RouterForward(actionWrapper);
     }
 
     /**

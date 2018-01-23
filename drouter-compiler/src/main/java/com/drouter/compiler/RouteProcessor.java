@@ -71,15 +71,41 @@ public class RouteProcessor extends AbstractProcessor {
             throw new RuntimeException("DRouter::Compiler >>> No module name, for more information, look at gradle log.\n" + errorMessage);
         }
 
-        // process 方法代表的是，有注解就都会进来 ，但是这里面是一团乱麻
-        Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(Action.class);
+        // 3. 生成 Java 类，效果如下
+        /*public class DRouter$$Assist implements IRouterAssist {
 
-        // 2. 解析到所有的 moduleName  和 ClassName
+            Map<String, String> modules = new HashMap<>();
+
+            public DRouter$$Assist() {
+                modules.put("login/module", "com.login.module.LoginModule");
+            }
+
+            @Override
+            public String findModuleClassName(String moduleName) {
+                return modules.get(moduleName);
+            }
+        }*/
+        // 生成类继承和实现接口
+        ClassName routerAssistClassName = ClassName.get("com.drouter.api.core", "IRouterModule");
+        ClassName mapClassName = ClassName.get("java.util", "Map");
+        TypeSpec.Builder classBuilder = TypeSpec.classBuilder("DRouter$$Module$$" + moduleName)
+                .addModifiers(Modifier.FINAL, Modifier.PUBLIC)
+                .addSuperinterface(routerAssistClassName)
+                .addField(mapClassName, "actions", Modifier.PRIVATE);
+
+        // 构造函数
+        MethodSpec.Builder constructorMethodBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
+        constructorMethodBuilder.addStatement("actions = new java.util.HashMap<>()");
+
+        // 2. 解析到所有的 Action 信息
+        Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(Action.class);
         Map<String, String> modules = new HashMap<>(elements.size());
 
+        ClassName actionWrapperClassName = ClassName.get("com.drouter.api.extra", "ActionWrapper");
+        ClassName threadModeClassName = ClassName.get("com.drouter.base", "ThreadMode");
         for (Element element : elements) {
 
-            // 获取注解上面的 moduleName
+            // 获取注解上面的 action
             Action actionAnnotation = element.getAnnotation(Action.class);
             String actionName = actionAnnotation.path();
 
@@ -99,44 +125,20 @@ public class RouteProcessor extends AbstractProcessor {
             // 添加到集合
             modules.put(actionName, actionClassName);
             System.out.println("------------------------>" + moduleName + " " + actionClassName);
-        }
 
-        // 3. 生成 Java 类，效果如下
-        /*public class DRouter$$Assist implements IRouterAssist {
-
-            Map<String, String> modules = new HashMap<>();
-
-            public DRouter$$Assist() {
-                modules.put("login/module", "com.login.module.LoginModule");
-            }
-
-            @Override
-            public String findModuleClassName(String moduleName) {
-                return modules.get(moduleName);
-            }
-        }*/
-        // 生成类继承和实现接口
-        ClassName routerAssistClassName = ClassName.get("com.drouter.api.core", "IRouterModule");
-        ClassName mapClassName = ClassName.get("java.util", "Map");
-        TypeSpec.Builder classBuilder = TypeSpec.classBuilder("DRouter$$Module$$" + moduleName)
-                .addModifiers(Modifier.FINAL, Modifier.PUBLIC).addSuperinterface(routerAssistClassName)
-                .addField(mapClassName, "modules", Modifier.PRIVATE);
-
-        // 构造函数
-        MethodSpec.Builder constructorMethodBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
-        constructorMethodBuilder.addStatement("this.modules = new java.util.HashMap<String,String>()");
-
-        for (Map.Entry<String, String> entry : modules.entrySet()) {
-            constructorMethodBuilder.addStatement(String.format("this.modules.put(\"%s\",\"%s\")", entry.getKey(), entry.getValue()));
+            constructorMethodBuilder.addStatement("this.actions.put($S,$T.build($T.class, $S, " + actionAnnotation.priority()
+                            + ", " + actionAnnotation.extraProcess() + ", $T." + actionAnnotation.threadMode() + "))",
+                    actionName, actionWrapperClassName, ClassName.bestGuess(actionClassName), actionName,threadModeClassName);
         }
 
         // 实现方法
-        MethodSpec.Builder unbindMethodBuilder = MethodSpec.methodBuilder("findActionClassName")
+
+        MethodSpec.Builder unbindMethodBuilder = MethodSpec.methodBuilder("findAction")
                 .addParameter(String.class, "actionName")
                 .addAnnotation(Override.class)
-                .returns(String.class)
+                .returns(actionWrapperClassName)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        unbindMethodBuilder.addStatement("return (String)modules.get(actionName)");
+        unbindMethodBuilder.addStatement("return (ActionWrapper)actions.get(actionName)");
 
         classBuilder.addMethod(constructorMethodBuilder.build());
         classBuilder.addMethod(unbindMethodBuilder.build());
