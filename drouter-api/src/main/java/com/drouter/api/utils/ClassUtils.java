@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import dalvik.system.DexFile;
 
 /**
- * description: 感谢阿里开源库 ARouter
+ * description: thanks alibaba ARouter
  * author: Darren on 2018/1/23 09:24
  * email: 240336124@qq.com
  * version: 1.0

@@ -11,7 +11,7 @@ import com.drouter.api.action.IRouterAction;
 import java.util.Map;
 
 /**
- * description:
+ * description: 处理主线程切换
  * author: Darren on 2018/1/23 16:10
  * email: 240336124@qq.com
  * version: 1.0
