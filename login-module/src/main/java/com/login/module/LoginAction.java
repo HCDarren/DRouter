@@ -16,12 +16,12 @@ import java.util.Map;
  * email: 240336124@qq.com
  * version: 1.0
  */
-@Action(path = "login/action", threadMode = ThreadMode.POSTING)
+@Action(path = "login/action", threadMode = ThreadMode.MAIN)
 public class LoginAction implements IRouterAction {
 
     @Override
     public RouterResult invokeAction(Context context, Map<String, Object> requestData) {
-        try {
+        /*try {
             int i = 0;
             while (i < 100) {
                 Thread.sleep(100);
@@ -31,7 +31,9 @@ public class LoginAction implements IRouterAction {
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-        return new RouterResult(RouterResult.SUCCEED_CODE);
+        }*/
+        RouterResult routerResult = new RouterResult.Builder().success().object(100).build();
+        Log.e("TAG","-->"+routerResult.toString());
+        return routerResult;
     }
 }

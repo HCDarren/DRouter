@@ -3,6 +3,7 @@ package com.darren.drouter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.drouter.api.core.DRouter;
@@ -23,8 +24,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void click(View view) {
 
-        RouterResult routerResult = DRouter.getInstance().action("login/action").context(MainActivity.this).param("key", "value").invokeAction();
+        RouterResult routerResult = DRouter.getInstance()
+                .action("login/action")
+                .context(MainActivity.this)
+                .param("key", "value").invokeAction();
 
-
+        Log.e("TAG","result = "+(routerResult.getCode() == 0x000022));
     }
 }

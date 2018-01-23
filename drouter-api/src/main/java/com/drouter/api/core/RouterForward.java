@@ -7,6 +7,7 @@ import com.drouter.api.action.IRouterAction;
 import com.drouter.api.extra.ActionWrapper;
 import com.drouter.api.result.RouterResult;
 import com.drouter.api.thread.PosterSupport;
+import com.drouter.base.ThreadMode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,17 @@ public class RouterForward {
     private ActionWrapper mActionWrapper;
     private Context mContext;
     private Map<String, Object> mParams;
+    private ThreadMode mThreadMode = null;
+
+    /**
+     * 指定 threadMode 这里指定的优先级高于 Action 注解上的 threadMode
+     * @param threadMode
+     * @return
+     */
+    public RouterForward threadMode(ThreadMode threadMode){
+        this.mThreadMode = threadMode;
+        return this;
+    }
 
     public RouterForward(ActionWrapper actionWrapper) {
         this.mActionWrapper = actionWrapper;
@@ -35,9 +47,17 @@ public class RouterForward {
     public RouterResult invokeAction() {
         IRouterAction routerAction = mActionWrapper.getRouterAction();
         if (routerAction == null)
-            return new RouterResult(RouterResult.ERROR_CODE);
+            return new RouterResult.Builder().error().build();
         // 处理优先级和线程
         return invokeAction(routerAction, Looper.myLooper() == Looper.getMainLooper());
+    }
+
+    /**
+     * 路由转发方法传递的 threadMode 优先级高于 Action 注解上的 threadMode
+     * @return
+     */
+    public ThreadMode getThreadMode() {
+        return mThreadMode == null?mActionWrapper.getThreadMode():mThreadMode;
     }
 
     /**
@@ -48,12 +68,12 @@ public class RouterForward {
      * @return
      */
     private RouterResult invokeAction(IRouterAction routerAction, boolean isMainThread) {
-        switch (mActionWrapper.getThreadMode()) {
+        switch (getThreadMode()) {
             case POSTING:
                 return invokeAction(routerAction);
             case MAIN:
                 if (isMainThread) {
-                    invokeAction(routerAction);
+                    return invokeAction(routerAction);
                 } else {
                     PosterSupport.getMainPoster().enqueue(routerAction, mContext, mParams);
                 }
@@ -62,7 +82,7 @@ public class RouterForward {
                 if (isMainThread) {
                     PosterSupport.getBackgroundPoster().enqueue(routerAction, mContext, mParams);
                 } else {
-                    invokeAction(routerAction);
+                    return invokeAction(routerAction);
                 }
                 break;
             case ASYNC:
@@ -71,7 +91,7 @@ public class RouterForward {
             default:
                 throw new IllegalStateException("Unknown thread mode: " + mActionWrapper.getThreadMode());
         }
-        return new RouterResult(RouterResult.ERROR_CODE);
+        return new RouterResult.Builder().success().build();
     }
 
     private RouterResult invokeAction(IRouterAction routerAction) {

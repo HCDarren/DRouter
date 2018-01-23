@@ -7,53 +7,28 @@ package com.drouter.api.result;
  * version: 1.0
  */
 public class RouterResult {
-    public static final int SUCCEED_CODE = 0x000011;
-    public static final int ERROR_CODE = 0x000022;
+    static final int SUCCEED_CODE = 0x000011;
+    static final int ERROR_CODE = 0x000022;
     private String msg;
-    private int code = SUCCEED_CODE;
+    private int code;
     private Object object;
-
-    public RouterResult() {
-
-    }
-
-    public RouterResult(int code) {
-        this.code = code;
-    }
-
-    public RouterResult(int code, String msg) {
-        this.code = code;
-        this.msg = msg;
-    }
-
-    public RouterResult(int code, String msg, Object object) {
-        this.code = code;
-        this.msg = msg;
-        this.object = object;
-    }
 
     public int getCode() {
         return code;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    private RouterResult(Builder builder) {
+        this.code = builder.code;
+        this.msg = builder.msg;
+        this.object = builder.object;
     }
 
     public String getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
     public Object getObject() {
         return object;
-    }
-
-    public void setObject(Object object) {
-        this.object = object;
     }
 
     /**
@@ -63,5 +38,36 @@ public class RouterResult {
      */
     public boolean isSucceed() {
         return code == SUCCEED_CODE;
+    }
+
+
+    public static class Builder{
+        int code = SUCCEED_CODE;
+        String msg;
+        Object object;
+
+        public Builder error(){
+            this.code = ERROR_CODE;
+            return this;
+        }
+
+        public Builder success(){
+            this.code = SUCCEED_CODE;
+            return this;
+        }
+
+        public Builder msg(String msg){
+            this.msg = msg;
+            return this;
+        }
+
+        public Builder object(Object object){
+            this.object = object;
+            return this;
+        }
+
+        public RouterResult build(){
+            return new RouterResult(this);
+        }
     }
 }

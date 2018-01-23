@@ -110,8 +110,8 @@ public class RouteProcessor extends AbstractProcessor {
             String actionName = actionAnnotation.path();
 
             // 必须以配置的 gradle 包名开头
-            if (!actionName.startsWith(moduleName)) {
-                error(element, "path name of the action must begin with %s%s", moduleName, "/");
+            if (!actionName.startsWith(moduleName+"/")) {
+                error(element, "Path name of the action must begin with %s%s", moduleName, "/");
             }
             // 获取 Action 的 ClassName
             Element enclosingElement = element.getEnclosingElement();

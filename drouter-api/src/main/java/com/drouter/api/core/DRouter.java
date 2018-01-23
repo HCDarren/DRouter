@@ -113,7 +113,7 @@ public class DRouter {
         String moduleName = actionName.split("/")[0];
         String moduleClassName = searchModuleClassName(moduleName);
         if (TextUtils.isEmpty(moduleClassName)) {
-            String message = "module find error";
+            String message = String.format("Please check to the action name is correct: according to the <%s> cannot find module %s.", actionName, moduleName);
             debugMessage(message);
             return new RouterForward(new ErrorActionWrapper());
         }
@@ -137,11 +137,8 @@ public class DRouter {
             actionWrapper = routerModule.findAction(actionName);
         }
         if (actionWrapper == null) {
-            if (debuggable) {
-                String message = String.format("According to the %s action name cannot find action.", actionName);
-                logger.e(Consts.TAG, message);
-                showToast(message);
-            }
+            String message = String.format("Please check to the action name is correct: according to the <%s> cannot find action.", actionName);
+            debugMessage(message);
             return new RouterForward(new ErrorActionWrapper());
         }
 
