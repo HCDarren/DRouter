@@ -145,7 +145,7 @@ public class DRouter {
             try {
                 Class<? extends IRouterAction> actionClass = (Class<? extends IRouterAction>) Class.forName(actionClassName);
 
-                if (!actionClass.isAssignableFrom(IRouterAction.class)) {
+                if (!IRouterAction.class.isAssignableFrom(actionClass)) {
                     String message = actionClassName + " must be implements IRouterAction.";
                     debugMessage(message);
                     return new RouterForward(new ErrorRouteAction());

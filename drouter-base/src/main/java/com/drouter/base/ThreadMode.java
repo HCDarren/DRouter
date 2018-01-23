@@ -1,7 +1,7 @@
 package com.drouter.base;
 
 /**
- * description:
+ * description: 感谢 EventBus 开源库
  * author: Darren on 2018/1/23 08:57
  * email: 240336124@qq.com
  * version: 1.0
