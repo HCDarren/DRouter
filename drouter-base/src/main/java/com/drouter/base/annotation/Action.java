@@ -32,7 +32,7 @@ public @interface Action {
     int priority() default -1;
 
     /**
-     * 单独额外的进程
+     * extra process
      */
     boolean extraProcess() default false;
 }
