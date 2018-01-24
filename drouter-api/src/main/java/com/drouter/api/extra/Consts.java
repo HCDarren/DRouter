@@ -7,9 +7,9 @@ package com.drouter.api.extra;
  * version: 1.0
  */
 public class Consts {
-    public static final String SDK_NAME = "ARouter";
+    public static final String SDK_NAME = "DRouter";
     public static final String TAG = SDK_NAME;
     public static final String SUFFIX_INTERCEPTORS = "Interceptors";
-    public static final String ROUTER_MODULE_PACK_NAME = "com.drotuer.assist";
-    public static final String ROUTER_INTERCEPTOR_PACK_NAME = "com.drotuer.assist";
+    public static final String ROUTER_MODULE_PACK_NAME = "com.drouter.assist";
+    public static final String ROUTER_INTERCEPTOR_PACK_NAME = "com.drouter.assist";
 }

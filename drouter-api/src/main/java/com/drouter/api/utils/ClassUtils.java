@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
+
+import com.drouter.api.core.DRouter;
+import com.drouter.api.extra.Consts;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +60,7 @@ public class ClassUtils {
             }
         }
 
-        Log.d("ARouter", "Filter " + classNames.size() + " classes by packageName <" + packageName + ">");
+        DRouter.logger.d(Consts.TAG, "Scan " + classNames.size() + " classes by packageName <" + packageName + ">");
         return classNames;
     }
 

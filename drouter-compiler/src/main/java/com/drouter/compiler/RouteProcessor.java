@@ -145,7 +145,7 @@ public class RouteProcessor extends AbstractProcessor {
 
         // 生成类，看下效果
         try {
-            JavaFile.builder("com.drotuer.assist", classBuilder.build())
+            JavaFile.builder("com.drouter.assist", classBuilder.build())
                     .addFileComment("DRouter 自动生成")
                     .build().writeTo(mFiler);
         } catch (IOException e) {
