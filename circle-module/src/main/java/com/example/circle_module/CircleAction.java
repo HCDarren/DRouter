@@ -1,12 +1,12 @@
 package com.example.circle_module;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 
-import com.drouter.base.annotation.Action;
-import com.drouter.base.ThreadMode;
 import com.drouter.api.action.IRouterAction;
 import com.drouter.api.result.RouterResult;
+import com.drouter.base.ThreadMode;
+import com.drouter.base.annotation.Action;
 
 import java.util.Map;
 
@@ -17,10 +17,12 @@ import java.util.Map;
  * version: 1.0
  */
 @Action(path = "circlemodule/test", threadMode = ThreadMode.MAIN)
-public class LoginAction implements IRouterAction {
+public class CircleAction implements IRouterAction {
     @Override
     public RouterResult invokeAction(Context context, Map<String, Object> requestData) {
-        Log.e("TAG", "CIRCLE LoginAction 方法执行了");
-        return null;
+        Intent intent = new Intent(context, CircleActivity.class);
+        intent.putExtra("key", (String) requestData.get("key"));
+        context.startActivity(intent);
+        return new RouterResult.Builder().success().build();
     }
 }

@@ -23,20 +23,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void click(View view) {
+    public void jumpLogin(View view) {
         DRouter.getInstance()
                 .action("login/action")
-                .context(MainActivity.this)
+                .context(this)
                 .param("key", "value")
                 .invokeAction(new ActionCallback() {
                     @Override
                     public void onInterrupt() {
-                        Log.e("TAG","被拦截了");
+                        Log.e("TAG", "被拦截了");
                     }
 
                     @Override
                     public void onResult(RouterResult result) {
-                        Log.e("TAG","result = "+result.toString());
+                        Log.e("TAG", "result = " + result.toString());
+                    }
+                });
+    }
+
+    public void jumpCircle(View view) {
+        DRouter.getInstance()
+                .action("circlemodule/test")
+                .context(this)
+                .param("key", "value")
+                .invokeAction(new ActionCallback() {
+                    @Override
+                    public void onInterrupt() {
+                        Log.e("TAG", "被拦截了");
+                    }
+
+                    @Override
+                    public void onResult(RouterResult result) {
+                        Log.e("TAG", "result = " + result.toString());
                     }
                 });
     }

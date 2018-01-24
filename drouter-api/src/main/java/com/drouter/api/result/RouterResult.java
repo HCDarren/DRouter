@@ -17,6 +17,7 @@ public class RouterResult {
         return code;
     }
 
+    private RouterResult(){}
     private RouterResult(Builder builder) {
         this.code = builder.code;
         this.msg = builder.msg;
