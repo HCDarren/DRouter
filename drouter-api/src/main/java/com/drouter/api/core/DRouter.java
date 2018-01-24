@@ -115,7 +115,7 @@ public class DRouter {
         // 1. 动态先查找加载 Module
         // actionName 的格式必须是 xxx/xxx
         if (!actionName.contains("/")) {
-            String message = "action name  format error -> " + actionName + ", like: moduleName/actionName";
+            String message = "action name  format error -> <" + actionName + ">, like: moduleName/actionName";
             debugMessage(message);
             return new RouterForward(new ErrorActionWrapper(), interceptors);
         }
