@@ -28,17 +28,7 @@ public class MainActivity extends AppCompatActivity {
                 .action("login/action")
                 .context(this)
                 .param("key", "value")
-                .invokeAction(new ActionCallback() {
-                    @Override
-                    public void onInterrupt() {
-                        Log.e("TAG", "被拦截了");
-                    }
-
-                    @Override
-                    public void onResult(RouterResult result) {
-                        Log.e("TAG", "result = " + result.toString());
-                    }
-                });
+                .invokeAction();
     }
 
     public void jumpCircle(View view) {
