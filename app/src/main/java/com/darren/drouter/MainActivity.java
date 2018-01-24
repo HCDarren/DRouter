@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.drouter.api.core.DRouter;
+import com.drouter.api.result.ActionCallback;
 import com.drouter.api.result.RouterResult;
 
 /**
@@ -24,11 +25,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void click(View view) {
 
-        RouterResult routerResult = DRouter.getInstance()
+        DRouter.getInstance()
                 .action("login/action")
                 .context(MainActivity.this)
-                .param("key", "value").invokeAction();
+                .param("key", "value")
+                .invokeAction(new ActionCallback() {
+                    @Override
+                    public void onInterrupt() {
 
-        Log.e("TAG","result = "+(routerResult.getCode() == 0x000022));
+                    }
+
+                    @Override
+                    public void onResult(RouterResult result) {
+                        Log.e("TAG", "result = " + (result.getObject()));
+                    }
+                });
+
     }
 }

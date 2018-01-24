@@ -6,11 +6,11 @@ package com.drouter.api.thread;
  * email: 240336124@qq.com
  * version: 1.0
  */
-public class PendingPostQueue {
-    private PendingPost head;
-    private PendingPost tail;
+public class ActionPostQueue {
+    private ActionPost head;
+    private ActionPost tail;
 
-    synchronized void enqueue(PendingPost pendingPost) {
+    synchronized void enqueue(ActionPost pendingPost) {
         if (pendingPost == null) {
             throw new NullPointerException("null cannot be enqueued");
         }
@@ -25,8 +25,8 @@ public class PendingPostQueue {
         notifyAll();
     }
 
-    synchronized PendingPost poll() {
-        PendingPost pendingPost = head;
+    synchronized ActionPost poll() {
+        ActionPost pendingPost = head;
         if (head != null) {
             head = head.next;
             if (head == null) {
@@ -36,7 +36,7 @@ public class PendingPostQueue {
         return pendingPost;
     }
 
-    synchronized PendingPost poll(int maxMillisToWait) throws InterruptedException {
+    synchronized ActionPost poll(int maxMillisToWait) throws InterruptedException {
         if (head == null) {
             wait(maxMillisToWait);
         }

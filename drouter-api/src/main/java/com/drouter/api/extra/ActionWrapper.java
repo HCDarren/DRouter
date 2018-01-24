@@ -15,7 +15,6 @@ public class ActionWrapper {
     private ThreadMode threadMode;
     private int priority = -1;
     private boolean extraProcess;
-
     private IRouterAction routerAction;
 
     ActionWrapper() {

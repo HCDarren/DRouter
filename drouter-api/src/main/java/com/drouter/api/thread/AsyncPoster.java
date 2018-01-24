@@ -1,10 +1,8 @@
 package com.drouter.api.thread;
 
-import android.content.Context;
-
 import com.drouter.api.action.IRouterAction;
-
-import java.util.Map;
+import com.drouter.api.extra.ActionWrapper;
+import com.drouter.api.result.RouterResult;
 
 /**
  * description: 处理异步
@@ -14,26 +12,30 @@ import java.util.Map;
  */
 public class AsyncPoster implements Runnable, Poster {
 
-    private final PendingPostQueue queue;
+    private final ActionPostQueue queue;
 
     AsyncPoster() {
-        queue = new PendingPostQueue();
+        queue = new ActionPostQueue();
     }
 
     @Override
     public void run() {
-        PendingPost pendingPost = queue.poll();
-        if (pendingPost == null) {
+        ActionPost actionPost = queue.poll();
+        if (actionPost == null) {
             throw new IllegalStateException("No pending post available");
         }
-        pendingPost.routerAction.invokeAction(pendingPost.context, pendingPost.params);
-        pendingPost.releasePendingPost();
+
+        ActionWrapper actionWrapper = actionPost.actionWrapper;
+        IRouterAction routerAction = actionWrapper.getRouterAction();
+        RouterResult routerResult = routerAction.invokeAction(actionPost.context, actionPost.params);
+        actionPost.actionCallback.onResult(routerResult);
+
+        actionPost.releasePendingPost();
     }
 
     @Override
-    public void enqueue(IRouterAction routerAction, Context context, Map<String, Object> params) {
-        PendingPost pendingPost = PendingPost.obtainPendingPost(routerAction, context, params);
-        queue.enqueue(pendingPost);
+    public void enqueue(ActionPost actionPost) {
+        queue.enqueue(actionPost);
         PosterSupport.getExecutorService().execute(this);
     }
 }

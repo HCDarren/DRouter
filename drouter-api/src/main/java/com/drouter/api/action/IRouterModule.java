@@ -1,4 +1,4 @@
-package com.drouter.api.core;
+package com.drouter.api.action;
 
 import com.drouter.api.extra.ActionWrapper;
 

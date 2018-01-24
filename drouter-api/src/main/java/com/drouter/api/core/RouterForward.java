@@ -1,12 +1,11 @@
 package com.drouter.api.core;
 
 import android.content.Context;
-import android.os.Looper;
 
 import com.drouter.api.action.IRouterAction;
 import com.drouter.api.extra.ActionWrapper;
+import com.drouter.api.result.ActionCallback;
 import com.drouter.api.result.RouterResult;
-import com.drouter.api.thread.PosterSupport;
 import com.drouter.base.ThreadMode;
 
 import java.util.HashMap;
@@ -26,10 +25,11 @@ public class RouterForward {
 
     /**
      * 指定 threadMode 这里指定的优先级高于 Action 注解上的 threadMode
+     *
      * @param threadMode
      * @return
      */
-    public RouterForward threadMode(ThreadMode threadMode){
+    public RouterForward threadMode(ThreadMode threadMode) {
         this.mThreadMode = threadMode;
         return this;
     }
@@ -44,54 +44,26 @@ public class RouterForward {
      *
      * @return
      */
-    public RouterResult invokeAction() {
-        IRouterAction routerAction = mActionWrapper.getRouterAction();
-        if (routerAction == null)
-            return new RouterResult.Builder().error().build();
-        // 处理优先级和线程
-        return invokeAction(routerAction, Looper.myLooper() == Looper.getMainLooper());
+    public void invokeAction() {
+        invokeAction(ActionCallback.DEFAULT_ACTION_CALLBACK);
+    }
+
+    /**
+     * 执行 Action
+     *
+     * @return
+     */
+    public void invokeAction(ActionCallback actionCallback) {
+        // 先
     }
 
     /**
      * 路由转发方法传递的 threadMode 优先级高于 Action 注解上的 threadMode
+     *
      * @return
      */
     public ThreadMode getThreadMode() {
-        return mThreadMode == null?mActionWrapper.getThreadMode():mThreadMode;
-    }
-
-    /**
-     * 处理线程切换
-     *
-     * @param routerAction
-     * @param isMainThread
-     * @return
-     */
-    private RouterResult invokeAction(IRouterAction routerAction, boolean isMainThread) {
-        switch (getThreadMode()) {
-            case POSTING:
-                return invokeAction(routerAction);
-            case MAIN:
-                if (isMainThread) {
-                    return invokeAction(routerAction);
-                } else {
-                    PosterSupport.getMainPoster().enqueue(routerAction, mContext, mParams);
-                }
-                break;
-            case BACKGROUND:
-                if (isMainThread) {
-                    PosterSupport.getBackgroundPoster().enqueue(routerAction, mContext, mParams);
-                } else {
-                    return invokeAction(routerAction);
-                }
-                break;
-            case ASYNC:
-                PosterSupport.getAsyncPoster().enqueue(routerAction, mContext, mParams);
-                break;
-            default:
-                throw new IllegalStateException("Unknown thread mode: " + mActionWrapper.getThreadMode());
-        }
-        return new RouterResult.Builder().success().build();
+        return mThreadMode == null ? mActionWrapper.getThreadMode() : mThreadMode;
     }
 
     private RouterResult invokeAction(IRouterAction routerAction) {

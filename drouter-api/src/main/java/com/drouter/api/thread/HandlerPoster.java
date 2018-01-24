@@ -1,14 +1,13 @@
 package com.drouter.api.thread;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
 
 import com.drouter.api.action.IRouterAction;
-
-import java.util.Map;
+import com.drouter.api.extra.ActionWrapper;
+import com.drouter.api.result.RouterResult;
 
 /**
  * description: 处理主线程切换
@@ -17,14 +16,14 @@ import java.util.Map;
  * version: 1.0
  */
 public class HandlerPoster extends Handler implements Poster {
-    private final PendingPostQueue queue;
+    private final ActionPostQueue queue;
     private final int maxMillisInsideHandleMessage;
     private boolean handlerActive;
 
     protected HandlerPoster(Looper looper, int maxMillisInsideHandleMessage) {
         super(looper);
         this.maxMillisInsideHandleMessage = maxMillisInsideHandleMessage;
-        queue = new PendingPostQueue();
+        queue = new ActionPostQueue();
     }
 
     @Override
@@ -33,20 +32,24 @@ public class HandlerPoster extends Handler implements Poster {
         try {
             long started = SystemClock.uptimeMillis();
             while (true) {
-                PendingPost pendingPost = queue.poll();
-                if (pendingPost == null) {
+                ActionPost actionPost = queue.poll();
+                if (actionPost == null) {
                     synchronized (this) {
                         // Check again, this time in synchronized
-                        pendingPost = queue.poll();
-                        if (pendingPost == null) {
+                        actionPost = queue.poll();
+                        if (actionPost == null) {
                             handlerActive = false;
                             return;
                         }
                     }
                 }
 
-                pendingPost.routerAction.invokeAction(pendingPost.context, pendingPost.params);
-                pendingPost.releasePendingPost();
+                ActionWrapper actionWrapper = actionPost.actionWrapper;
+                IRouterAction routerAction = actionWrapper.getRouterAction();
+                RouterResult routerResult = routerAction.invokeAction(actionPost.context, actionPost.params);
+                actionPost.actionCallback.onResult(routerResult);
+
+                actionPost.releasePendingPost();
 
                 long timeInMethod = SystemClock.uptimeMillis() - started;
                 if (timeInMethod >= maxMillisInsideHandleMessage) {
@@ -63,10 +66,9 @@ public class HandlerPoster extends Handler implements Poster {
     }
 
     @Override
-    public void enqueue(IRouterAction routerAction, Context context, Map<String, Object> params) {
-        PendingPost pendingPost = PendingPost.obtainPendingPost(routerAction, context, params);
+    public void enqueue(ActionPost actionPost) {
         synchronized (this) {
-            queue.enqueue(pendingPost);
+            queue.enqueue(actionPost);
             if (!handlerActive) {
                 handlerActive = true;
                 if (!sendMessage(obtainMessage())) {

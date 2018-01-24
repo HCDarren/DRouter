@@ -86,7 +86,7 @@ public class RouteProcessor extends AbstractProcessor {
             }
         }*/
         // 生成类继承和实现接口
-        ClassName routerAssistClassName = ClassName.get("com.drouter.api.core", "IRouterModule");
+        ClassName routerAssistClassName = ClassName.get("com.drouter.api.action", "IRouterModule");
         ClassName mapClassName = ClassName.get("java.util", "Map");
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder("DRouter$$Module$$" + moduleName)
                 .addModifiers(Modifier.FINAL, Modifier.PUBLIC)

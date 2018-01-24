@@ -4,19 +4,12 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DRouter.iml" filepath="$PROJECT_DIR$/DRouter.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/base-core/base-core.iml" filepath="$PROJECT_DIR$/base-core/base-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/base-core/base-core.iml" filepath="$PROJECT_DIR$/base-core/base-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/circle-module/circle-module.iml" filepath="$PROJECT_DIR$/circle-module/circle-module.iml" />
       <module fileurl="file://$PROJECT_DIR$/circle-module/circle-module.iml" filepath="$PROJECT_DIR$/circle-module/circle-module.iml" />
       <module fileurl="file://E:\Android\AndroidStudyProject\DRouter\drouter-base\drouter-annotation.iml" filepath="E:\Android\AndroidStudyProject\DRouter\drouter-base\drouter-annotation.iml" />
       <module fileurl="file://$PROJECT_DIR$/drouter-api/drouter-api.iml" filepath="$PROJECT_DIR$/drouter-api/drouter-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/drouter-api/drouter-api.iml" filepath="$PROJECT_DIR$/drouter-api/drouter-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/drouter-base/drouter-base.iml" filepath="$PROJECT_DIR$/drouter-base/drouter-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/drouter-base/drouter-base.iml" filepath="$PROJECT_DIR$/drouter-base/drouter-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/drouter-compiler/drouter-compiler.iml" filepath="$PROJECT_DIR$/drouter-compiler/drouter-compiler.iml" />
-      <module fileurl="file://$PROJECT_DIR$/drouter-compiler/drouter-compiler.iml" filepath="$PROJECT_DIR$/drouter-compiler/drouter-compiler.iml" />
-      <module fileurl="file://$PROJECT_DIR$/login-module/login-module.iml" filepath="$PROJECT_DIR$/login-module/login-module.iml" />
       <module fileurl="file://$PROJECT_DIR$/login-module/login-module.iml" filepath="$PROJECT_DIR$/login-module/login-module.iml" />
     </modules>
   </component>

@@ -1,12 +1,10 @@
 package com.drouter.api.thread;
 
-import android.content.Context;
-
 import com.drouter.api.action.IRouterAction;
 import com.drouter.api.core.DRouter;
+import com.drouter.api.extra.ActionWrapper;
 import com.drouter.api.extra.Consts;
-
-import java.util.Map;
+import com.drouter.api.result.RouterResult;
 
 /**
  * description:
@@ -16,19 +14,18 @@ import java.util.Map;
  */
 final class BackgroundPoster implements Runnable, Poster {
 
-    private final PendingPostQueue queue;
+    private final ActionPostQueue queue;
 
     private volatile boolean executorRunning;
 
     BackgroundPoster() {
-        queue = new PendingPostQueue();
+        queue = new ActionPostQueue();
     }
 
     @Override
-    public void enqueue(IRouterAction routerAction, Context context, Map<String, Object> params) {
-        PendingPost pendingPost = PendingPost.obtainPendingPost(routerAction, context, params);
+    public void enqueue(ActionPost actionPost) {
         synchronized (this) {
-            queue.enqueue(pendingPost);
+            queue.enqueue(actionPost);
             if (!executorRunning) {
                 executorRunning = true;
                 PosterSupport.getExecutorService().execute(this);
@@ -41,20 +38,24 @@ final class BackgroundPoster implements Runnable, Poster {
         try {
             try {
                 while (true) {
-                    PendingPost pendingPost = queue.poll(1000);
-                    if (pendingPost == null) {
+                    ActionPost actionPost = queue.poll(1000);
+                    if (actionPost == null) {
                         synchronized (this) {
                             // Check again, this time in synchronized
-                            pendingPost = queue.poll();
-                            if (pendingPost == null) {
+                            actionPost = queue.poll();
+                            if (actionPost == null) {
                                 executorRunning = false;
                                 return;
                             }
                         }
                     }
 
-                    pendingPost.routerAction.invokeAction(pendingPost.context, pendingPost.params);
-                    pendingPost.releasePendingPost();
+                    ActionWrapper actionWrapper = actionPost.actionWrapper;
+                    IRouterAction routerAction = actionWrapper.getRouterAction();
+                    RouterResult routerResult = routerAction.invokeAction(actionPost.context, actionPost.params);
+                    actionPost.actionCallback.onResult(routerResult);
+                    
+                    actionPost.releasePendingPost();
                 }
             } catch (InterruptedException e) {
                 DRouter.logger.e(Consts.TAG, Thread.currentThread().getName() + " was interruppted");
