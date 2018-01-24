@@ -21,9 +21,6 @@ public class CallActionInterceptor implements Interceptor {
         // 执行 Action 方法
         ActionPost actionPost = chain.action();
         invokeAction(actionPost, Looper.myLooper() == Looper.getMainLooper());
-
-        // 继续往下执行
-        chain.proceed(actionPost);
     }
 
     /**
