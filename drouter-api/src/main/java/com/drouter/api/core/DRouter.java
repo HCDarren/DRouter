@@ -146,7 +146,10 @@ public class DRouter {
         ActionWrapper actionWrapper = cacheRouterActions.get(actionName);
         if (actionWrapper == null) {
             actionWrapper = routerModule.findAction(actionName);
+        } else {
+            return new RouterForward(actionWrapper, interceptors);
         }
+
         if (actionWrapper == null) {
             String message = String.format("Please check to the action name is correct: according to the <%s> cannot find action.", actionName);
             debugMessage(message);
