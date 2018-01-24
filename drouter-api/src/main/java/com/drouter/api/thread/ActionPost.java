@@ -35,12 +35,13 @@ public final class ActionPost {
         synchronized (pendingPostPool) {
             int size = pendingPostPool.size();
             if (size > 0) {
-                ActionPost pendingPost = pendingPostPool.remove(size - 1);
-                pendingPost.context = context;
-                pendingPost.actionWrapper = actionWrapper;
-                pendingPost.params = params;
-                pendingPost.next = null;
-                return pendingPost;
+                ActionPost actionPost = pendingPostPool.remove(size - 1);
+                actionPost.context = context;
+                actionPost.actionWrapper = actionWrapper;
+                actionPost.params = params;
+                actionPost.next = null;
+                actionPost.actionCallback = actionCallback;
+                return actionPost;
             }
         }
         return new ActionPost(actionWrapper, context, params, actionCallback);

@@ -16,7 +16,7 @@ import java.util.Map;
  * email: 240336124@qq.com
  * version: 1.0
  */
-@Action(path = "login/action", threadMode = ThreadMode.ASYNC)
+@Action(path = "login/action", threadMode = ThreadMode.MAIN)
 public class LoginAction implements IRouterAction {
 
     @Override
