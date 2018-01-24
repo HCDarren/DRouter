@@ -31,7 +31,7 @@ public final class ActionPost {
         this.actionCallback = actionCallback;
     }
 
-    static ActionPost obtainPendingPost(ActionWrapper actionWrapper, Context context, Map<String, Object> params, ActionCallback actionCallback) {
+    public static ActionPost obtainActionPost(ActionWrapper actionWrapper, Context context, Map<String, Object> params, ActionCallback actionCallback) {
         synchronized (pendingPostPool) {
             int size = pendingPostPool.size();
             if (size > 0) {

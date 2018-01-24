@@ -25,6 +25,10 @@ public class ActionWrapper {
         this.routerAction = routerAction;
     }
 
+    public void setThreadMode(ThreadMode threadMode) {
+        this.threadMode = threadMode;
+    }
+
     public IRouterAction getRouterAction() {
         return routerAction;
     }

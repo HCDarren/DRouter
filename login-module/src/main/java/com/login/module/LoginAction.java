@@ -1,7 +1,7 @@
 package com.login.module;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 
 import com.drouter.api.action.IRouterAction;
 import com.drouter.api.result.RouterResult;
@@ -16,24 +16,14 @@ import java.util.Map;
  * email: 240336124@qq.com
  * version: 1.0
  */
-@Action(path = "login/action", threadMode = ThreadMode.MAIN)
+@Action(path = "login/action", threadMode = ThreadMode.ASYNC)
 public class LoginAction implements IRouterAction {
 
     @Override
     public RouterResult invokeAction(Context context, Map<String, Object> requestData) {
-        /*try {
-            int i = 0;
-            while (i < 100) {
-                Thread.sleep(100);
-
-                Log.e(Thread.currentThread().getName(), "i = " + i);
-                i++;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-        RouterResult routerResult = new RouterResult.Builder().success().object(100).build();
-        Log.e("TAG","-->"+routerResult.toString());
-        return routerResult;
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.putExtra("key", (String) requestData.get("key"));
+        context.startActivity(intent);
+        return new RouterResult.Builder().success().object(100).build();
     }
 }

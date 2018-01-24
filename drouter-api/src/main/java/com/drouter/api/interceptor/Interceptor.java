@@ -2,8 +2,6 @@ package com.drouter.api.interceptor;
 
 import com.drouter.api.thread.ActionPost;
 
-import java.io.IOException;
-
 /**
  * description: 拦截器
  * author: Darren on 2018/1/22 11:59
@@ -11,7 +9,7 @@ import java.io.IOException;
  * version: 1.0
  */
 public interface Interceptor {
-    void intercept(ActionChain chain) throws IOException;
+    void intercept(ActionChain chain);
 
     interface ActionChain {
         // 打断拦截

@@ -9,8 +9,6 @@ import com.drouter.api.result.RouterResult;
 import com.drouter.api.thread.ActionPost;
 import com.drouter.api.thread.PosterSupport;
 
-import java.io.IOException;
-
 /**
  * description: 执行 Action 方法的最后一个拦截器
  * author: Darren on 2018/1/24 09:03
@@ -19,10 +17,13 @@ import java.io.IOException;
  */
 public class CallActionInterceptor implements Interceptor {
     @Override
-    public void intercept(ActionChain chain) throws IOException {
+    public void intercept(ActionChain chain) {
         // 执行 Action 方法
         ActionPost actionPost = chain.action();
         invokeAction(actionPost, Looper.myLooper() == Looper.getMainLooper());
+
+        // 继续往下执行
+        chain.proceed(actionPost);
     }
 
     /**

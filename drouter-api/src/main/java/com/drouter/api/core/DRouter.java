@@ -14,9 +14,12 @@ import com.drouter.api.extra.Consts;
 import com.drouter.api.extra.DefaultLogger;
 import com.drouter.api.extra.ErrorActionWrapper;
 import com.drouter.api.extra.ILogger;
+import com.drouter.api.interceptor.CallActionInterceptor;
+import com.drouter.api.interceptor.Interceptor;
 import com.drouter.api.utils.ClassUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +44,8 @@ public class DRouter {
     // 所有 moudle
     private static List<String> mAllModuleClassName;
     private Context mApplicationContext;
+
+    private static List<Interceptor> interceptors = new ArrayList<>();
 
     public static synchronized void openDebug() {
         debuggable = true;
@@ -98,6 +103,9 @@ public class DRouter {
         for (String className : mAllModuleClassName) {
             logger.d(Consts.TAG, "扫描到: " + className);
         }
+
+        // 最后添加 Action 执行调用的拦截器
+        interceptors.add(new CallActionInterceptor());
     }
 
 
@@ -107,7 +115,7 @@ public class DRouter {
         if (!actionName.contains("/")) {
             String message = "action name  format error -> " + actionName + ", like: moduleName/actionName";
             debugMessage(message);
-            return new RouterForward(new ErrorActionWrapper());
+            return new RouterForward(new ErrorActionWrapper(), interceptors);
         }
 
         // 2.获取 moduleName，实例化 Module，并缓存
@@ -116,7 +124,7 @@ public class DRouter {
         if (TextUtils.isEmpty(moduleClassName)) {
             String message = String.format("Please check to the action name is correct: according to the <%s> cannot find module %s.", actionName, moduleName);
             debugMessage(message);
-            return new RouterForward(new ErrorActionWrapper());
+            return new RouterForward(new ErrorActionWrapper(), interceptors);
         }
         IRouterModule routerModule = cacheRouterModules.get(moduleClassName);
         if (routerModule == null) {
@@ -128,7 +136,7 @@ public class DRouter {
                 e.printStackTrace();
                 String message = "instance module error: " + e.getMessage();
                 debugMessage(message);
-                return new RouterForward(new ErrorActionWrapper());
+                return new RouterForward(new ErrorActionWrapper(), interceptors);
             }
         }
 
@@ -140,7 +148,7 @@ public class DRouter {
         if (actionWrapper == null) {
             String message = String.format("Please check to the action name is correct: according to the <%s> cannot find action.", actionName);
             debugMessage(message);
-            return new RouterForward(new ErrorActionWrapper());
+            return new RouterForward(new ErrorActionWrapper(), interceptors);
         }
 
         Class<? extends IRouterAction> actionClass = actionWrapper.getActionClass();
@@ -150,7 +158,7 @@ public class DRouter {
                 if (!IRouterAction.class.isAssignableFrom(actionClass)) {
                     String message = actionClass.getCanonicalName() + " must be implements IRouterAction.";
                     debugMessage(message);
-                    return new RouterForward(new ErrorActionWrapper());
+                    return new RouterForward(new ErrorActionWrapper(), interceptors);
                 }
                 // 创建 RouterAction 实例，并缓存起来
                 routerAction = actionClass.newInstance();
@@ -159,11 +167,11 @@ public class DRouter {
             } catch (Exception e) {
                 String message = "instance action error: " + e.getMessage();
                 debugMessage(message);
-                return new RouterForward(new ErrorActionWrapper());
+                return new RouterForward(new ErrorActionWrapper(), interceptors);
             }
         }
 
-        return new RouterForward(actionWrapper);
+        return new RouterForward(actionWrapper, interceptors);
     }
 
     /**
