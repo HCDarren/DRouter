@@ -93,7 +93,7 @@ public class DRouter {
         this.mApplicationContext = context;
         // 获取 com.drotuer.assist 包名下的所有类名信息
         try {
-            mAllModuleClassName = ClassUtils.getFileNameByPackageName(context, Consts.AROUTER_ASSIST_PACK_NAME);
+            mAllModuleClassName = ClassUtils.getFileNameByPackageName(context, Consts.ROUTER_MODULE_PACK_NAME);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

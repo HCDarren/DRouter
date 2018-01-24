@@ -10,6 +10,6 @@ public class Consts {
     public static final String SDK_NAME = "ARouter";
     public static final String TAG = SDK_NAME;
     public static final String SUFFIX_INTERCEPTORS = "Interceptors";
-    public static final String SUFFIX_PROVIDERS = "Providers";
-    public static final String AROUTER_ASSIST_PACK_NAME = "com.drotuer.assist";
+    public static final String ROUTER_MODULE_PACK_NAME = "com.drotuer.assist";
+    public static final String ROUTER_INTERCEPTOR_PACK_NAME = "com.drotuer.assist";
 }

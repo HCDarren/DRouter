@@ -13,6 +13,6 @@ import java.util.Map;
  * version: 1.0
  */
 public interface IRouterAction {
-    // 执行方法
+    // 执行 Action 方法
     RouterResult invokeAction(Context context, Map<String, Object> requestData);
 }

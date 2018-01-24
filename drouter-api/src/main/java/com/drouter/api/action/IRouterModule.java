@@ -9,5 +9,6 @@ import com.drouter.api.extra.ActionWrapper;
  * version: 1.0
  */
 public interface IRouterModule {
+    // 通过 Action 的名称找到 Action
     ActionWrapper findAction(String actionName);
 }
