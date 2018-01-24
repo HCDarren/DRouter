@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.drouter.api.action.IRouterAction;
+import com.drouter.api.action.IRouterInterceptor;
 import com.drouter.api.action.IRouterModule;
 import com.drouter.api.exception.InitException;
 import com.drouter.api.extra.ActionWrapper;
@@ -14,9 +15,10 @@ import com.drouter.api.extra.Consts;
 import com.drouter.api.extra.DefaultLogger;
 import com.drouter.api.extra.ErrorActionWrapper;
 import com.drouter.api.extra.ILogger;
+import com.drouter.api.interceptor.ActionInterceptor;
 import com.drouter.api.interceptor.CallActionInterceptor;
 import com.drouter.api.interceptor.ErrorActionInterceptor;
-import com.drouter.api.interceptor.Interceptor;
+import com.drouter.api.thread.PosterSupport;
 import com.drouter.api.utils.ClassUtils;
 
 import java.io.IOException;
@@ -46,7 +48,7 @@ public class DRouter {
     private static List<String> mAllModuleClassName;
     private Context mApplicationContext;
 
-    private static List<Interceptor> interceptors = new ArrayList<>();
+    private static List<ActionInterceptor> interceptors = new ArrayList<>();
 
     public static synchronized void openDebug() {
         debuggable = true;
@@ -104,10 +106,47 @@ public class DRouter {
         for (String className : mAllModuleClassName) {
             logger.d(Consts.TAG, "扫描到: " + className);
         }
+        // 添加并且实例化所有拦截器
+        scanAddInterceptors(context);
+    }
 
-        interceptors.add(new ErrorActionInterceptor());
-        // 最后添加 Action 执行调用的拦截器
-        interceptors.add(new CallActionInterceptor());
+    // 扫描并且添加拦截器
+    private void scanAddInterceptors(final Context context) {
+        PosterSupport.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                // 1. 错误拦截器
+                interceptors.add(new ErrorActionInterceptor());
+                // 2. module 自定义的拦截器
+                try {
+                    List<String> interceptorGroups = ClassUtils.getFileNameByPackageName(context, Consts.ROUTER_INTERCEPTOR_PACK_NAME);
+                    // 循环所有的 Group 拦截器
+                    for (String interceptorGroup : interceptorGroups) {
+                        if (interceptorGroup.contains(Consts.ROUTER_INTERCEPTOR_GROUP_PREFIX)) {
+                            IRouterInterceptor routerInterceptor = (IRouterInterceptor) Class.forName(interceptorGroup).newInstance();
+                            List<Class<? extends ActionInterceptor>> interceptorClasses = routerInterceptor.getInterceptors();
+                            for (int i = interceptorClasses.size()-1; i >= 0; i--) {
+                                Class<? extends ActionInterceptor> interceptorClass = interceptorClasses.get(i);
+                                // 自定义拦截器没有实现 ActionInterceptor
+                                if (!ActionInterceptor.class.isAssignableFrom(interceptorClass)) {
+                                    String message = interceptorClass.getCanonicalName() + " must be implements ActionInterceptor.";
+                                    debugMessage(message);
+                                    continue;
+                                }
+
+                                // 添加到拦截器链表
+                                interceptors.add(interceptorClass.newInstance());
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                // 3. 最后添加 Action 执行调用的拦截器
+                interceptors.add(new CallActionInterceptor());
+            }
+        });
     }
 
 

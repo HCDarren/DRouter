@@ -8,7 +8,7 @@ import com.drouter.api.thread.ActionPost;
  * email: 240336124@qq.com
  * version: 1.0
  */
-public interface Interceptor {
+public interface ActionInterceptor {
     void intercept(ActionChain chain);
 
     interface ActionChain {
@@ -20,5 +20,7 @@ public interface Interceptor {
 
         // 获取 ActionPost
         ActionPost action();
+
+        String actionPath();
     }
 }

@@ -34,7 +34,7 @@ import javax.tools.Diagnostic;
  * version: 1.0
  */
 @AutoService(Processor.class)
-public class RouteProcessor extends AbstractProcessor {
+public class ModuleProcessor extends AbstractProcessor {
     private Elements mElementUtils;
     private Filer mFiler;
     private final String KEY_MODULE_NAME = "moduleName";
@@ -95,7 +95,7 @@ public class RouteProcessor extends AbstractProcessor {
 
         // 构造函数
         MethodSpec.Builder constructorMethodBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
-        constructorMethodBuilder.addStatement("actions = new java.util.HashMap<>()");
+        constructorMethodBuilder.addStatement("actions = new $T<>()",ClassName.bestGuess("java.util.HashMap"));
 
         // 2. 解析到所有的 Action 信息
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(Action.class);
@@ -110,7 +110,7 @@ public class RouteProcessor extends AbstractProcessor {
             String actionName = actionAnnotation.path();
 
             // 必须以配置的 gradle 包名开头
-            if (!actionName.startsWith(moduleName+"/")) {
+            if (!actionName.startsWith(moduleName + "/")) {
                 error(element, "Path name of the action must begin with %s%s", moduleName, "/");
             }
             // 获取 Action 的 ClassName
@@ -124,11 +124,10 @@ public class RouteProcessor extends AbstractProcessor {
             }
             // 添加到集合
             modules.put(actionName, actionClassName);
-            System.out.println("------------------------>" + moduleName + " " + actionClassName);
 
             constructorMethodBuilder.addStatement("this.actions.put($S,$T.build($T.class, $S, " + actionAnnotation.priority()
                             + ", " + actionAnnotation.extraProcess() + ", $T." + actionAnnotation.threadMode() + "))",
-                    actionName, actionWrapperClassName, ClassName.bestGuess(actionClassName), actionName,threadModeClassName);
+                    actionName, actionWrapperClassName, ClassName.bestGuess(actionClassName), actionName, threadModeClassName);
         }
 
         // 实现方法
@@ -145,7 +144,7 @@ public class RouteProcessor extends AbstractProcessor {
 
         // 生成类，看下效果
         try {
-            JavaFile.builder("com.drouter.assist", classBuilder.build())
+            JavaFile.builder(Consts.ROUTER_MODULE_PACK_NAME, classBuilder.build())
                     .addFileComment("DRouter 自动生成")
                     .build().writeTo(mFiler);
         } catch (IOException e) {

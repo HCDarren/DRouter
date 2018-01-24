@@ -5,7 +5,7 @@ import android.content.Context;
 import com.drouter.api.action.IRouterAction;
 import com.drouter.api.extra.ActionWrapper;
 import com.drouter.api.interceptor.ActionInterceptorChain;
-import com.drouter.api.interceptor.Interceptor;
+import com.drouter.api.interceptor.ActionInterceptor;
 import com.drouter.api.result.ActionCallback;
 import com.drouter.api.result.RouterResult;
 import com.drouter.api.thread.ActionPost;
@@ -27,7 +27,7 @@ public class RouterForward {
     private Map<String, Object> mParams;
     private ThreadMode mThreadMode = null;
     // 所有拦截器表
-    private List<Interceptor> interceptors;
+    private List<ActionInterceptor> interceptors;
 
     /**
      * 指定 threadMode 这里指定的优先级高于 Action 注解上的 threadMode
@@ -40,7 +40,7 @@ public class RouterForward {
         return this;
     }
 
-    public RouterForward(ActionWrapper actionWrapper, List<Interceptor> interceptors) {
+    public RouterForward(ActionWrapper actionWrapper, List<ActionInterceptor> interceptors) {
         this.mActionWrapper = actionWrapper;
         mParams = new HashMap<>();
         this.interceptors = interceptors;
@@ -65,7 +65,7 @@ public class RouterForward {
         mActionWrapper.setThreadMode(getThreadMode());
         ActionPost actionPost = ActionPost.obtainActionPost(mActionWrapper, mContext, mParams, actionCallback);
         // 开始拦截器的流程
-        Interceptor.ActionChain chain = new ActionInterceptorChain(interceptors, actionPost, 0);
+        ActionInterceptor.ActionChain chain = new ActionInterceptorChain(interceptors, actionPost, 0);
         chain.proceed(actionPost);
     }
 

@@ -15,7 +15,7 @@ import com.drouter.api.thread.PosterSupport;
  * email: 240336124@qq.com
  * version: 1.0
  */
-public class CallActionInterceptor implements Interceptor {
+public class CallActionInterceptor implements ActionInterceptor {
     @Override
     public void intercept(ActionChain chain) {
         // 执行 Action 方法

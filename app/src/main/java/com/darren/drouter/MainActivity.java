@@ -17,6 +17,7 @@ import com.drouter.api.result.RouterResult;
  * version: 1.0
  */
 public class MainActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

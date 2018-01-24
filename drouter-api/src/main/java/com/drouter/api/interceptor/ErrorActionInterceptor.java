@@ -10,7 +10,7 @@ import com.drouter.api.thread.ActionPost;
  * email: 240336124@qq.com
  * version: 1.0
  */
-public class ErrorActionInterceptor implements Interceptor {
+public class ErrorActionInterceptor implements ActionInterceptor {
     @Override
     public void intercept(ActionChain chain) {
         ActionPost actionPost = chain.action();
@@ -18,6 +18,7 @@ public class ErrorActionInterceptor implements Interceptor {
         if (actionPost.actionWrapper instanceof ErrorActionWrapper) {
             chain.onInterrupt();
         }
+
         // 继续分发
         chain.proceed(actionPost);
     }
