@@ -15,6 +15,7 @@ import com.drouter.api.extra.DefaultLogger;
 import com.drouter.api.extra.ErrorActionWrapper;
 import com.drouter.api.extra.ILogger;
 import com.drouter.api.interceptor.CallActionInterceptor;
+import com.drouter.api.interceptor.ErrorActionInterceptor;
 import com.drouter.api.interceptor.Interceptor;
 import com.drouter.api.utils.ClassUtils;
 
@@ -104,6 +105,7 @@ public class DRouter {
             logger.d(Consts.TAG, "扫描到: " + className);
         }
 
+        interceptors.add(new ErrorActionInterceptor());
         // 最后添加 Action 执行调用的拦截器
         interceptors.add(new CallActionInterceptor());
     }

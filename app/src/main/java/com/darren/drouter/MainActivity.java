@@ -3,12 +3,9 @@ package com.darren.drouter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.drouter.api.core.DRouter;
-import com.drouter.api.result.ActionCallback;
-import com.drouter.api.result.RouterResult;
 
 /**
  * description:
@@ -24,22 +21,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void click(View view) {
-
         DRouter.getInstance()
                 .action("login/action")
                 .context(MainActivity.this)
                 .param("key", "value")
-                .invokeAction(new ActionCallback() {
-                    @Override
-                    public void onInterrupt() {
-
-                    }
-
-                    @Override
-                    public void onResult(RouterResult result) {
-                        Log.e("TAG", "result = " + (result.getObject()));
-                    }
-                });
-
+                .invokeAction();
     }
 }
