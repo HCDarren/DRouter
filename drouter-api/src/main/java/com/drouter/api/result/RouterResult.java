@@ -23,6 +23,15 @@ public class RouterResult {
         this.object = builder.object;
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + "{" +
+                "msg='" + msg + '\'' +
+                ", code=" + code +
+                ", object=" + object +
+                '}';
+    }
+
     public String getMsg() {
         return msg;
     }
@@ -41,32 +50,32 @@ public class RouterResult {
     }
 
 
-    public static class Builder{
+    public static class Builder {
         int code = SUCCEED_CODE;
         String msg;
         Object object;
 
-        public Builder error(){
+        public Builder error() {
             this.code = ERROR_CODE;
             return this;
         }
 
-        public Builder success(){
+        public Builder success() {
             this.code = SUCCEED_CODE;
             return this;
         }
 
-        public Builder msg(String msg){
+        public Builder msg(String msg) {
             this.msg = msg;
             return this;
         }
 
-        public Builder object(Object object){
+        public Builder object(Object object) {
             this.object = object;
             return this;
         }
 
-        public RouterResult build(){
+        public RouterResult build() {
             return new RouterResult(this);
         }
     }
