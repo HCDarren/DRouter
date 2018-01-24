@@ -1,5 +1,7 @@
 package com.example.circle_module;
 
+import android.widget.Toast;
+
 import com.drouter.api.core.DRouter;
 import com.drouter.api.interceptor.ActionInterceptor;
 import com.drouter.api.thread.ActionPost;
@@ -18,6 +20,7 @@ public class CircleInterceptor implements ActionInterceptor {
     public void intercept(ActionChain chain) {
         ActionPost actionPost = chain.action();
         if (chain.actionPath().equals("circlemodule/test")) {
+            Toast.makeText(actionPost.context, "拦截圈子，跳转到登录", Toast.LENGTH_LONG).show();
             // 拦截
             chain.onInterrupt();
             // 跳转到登录页面
