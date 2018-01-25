@@ -27,11 +27,6 @@ public @interface Action {
     String path();
 
     /**
-     * The priority of route.
-     */
-    int priority() default -1;
-
-    /**
      * extra process
      */
     boolean extraProcess() default false;

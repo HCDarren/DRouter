@@ -125,8 +125,8 @@ public class ModuleProcessor extends AbstractProcessor {
             // 添加到集合
             modules.put(actionName, actionClassName);
 
-            constructorMethodBuilder.addStatement("this.actions.put($S,$T.build($T.class, $S, " + actionAnnotation.priority()
-                            + ", " + actionAnnotation.extraProcess() + ", $T." + actionAnnotation.threadMode() + "))",
+            constructorMethodBuilder.addStatement("this.actions.put($S,$T.build($T.class, $S, "
+                             + actionAnnotation.extraProcess() + ", $T." + actionAnnotation.threadMode() + "))",
                     actionName, actionWrapperClassName, ClassName.bestGuess(actionClassName), actionName, threadModeClassName);
         }
 

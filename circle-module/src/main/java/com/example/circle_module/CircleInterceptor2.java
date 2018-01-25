@@ -10,7 +10,7 @@ import com.drouter.base.annotation.Interceptor;
  * email: 240336124@qq.com
  * version: 1.0
  */
-@Interceptor(priority = 7)
+@Interceptor(priority = 10)
 public class CircleInterceptor2 implements ActionInterceptor {
 
     @Override

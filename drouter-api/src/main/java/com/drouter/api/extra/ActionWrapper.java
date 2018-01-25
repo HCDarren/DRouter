@@ -13,7 +13,6 @@ public class ActionWrapper {
     private Class<? extends IRouterAction> actionClass;
     private String path;
     private ThreadMode threadMode;
-    private int priority = -1;
     private boolean extraProcess;
     private IRouterAction routerAction;
 
@@ -33,10 +32,9 @@ public class ActionWrapper {
         return routerAction;
     }
 
-    private ActionWrapper(Class<? extends IRouterAction> actionClass, String path, int priority, boolean extraProcess, ThreadMode threadMode) {
+    private ActionWrapper(Class<? extends IRouterAction> actionClass, String path, boolean extraProcess, ThreadMode threadMode) {
         this.actionClass = actionClass;
         this.path = path;
-        this.priority = priority;
         this.extraProcess = extraProcess;
         this.threadMode = threadMode;
     }
@@ -53,15 +51,11 @@ public class ActionWrapper {
         return path;
     }
 
-    public int getPriority() {
-        return priority;
-    }
-
     public boolean isExtraProcess() {
         return extraProcess;
     }
 
-    public static ActionWrapper build(Class<? extends IRouterAction> actionClass, String path, int priority, boolean extraProcess, ThreadMode threadMode) {
-        return new ActionWrapper(actionClass, path, priority, extraProcess, threadMode);
+    public static ActionWrapper build(Class<? extends IRouterAction> actionClass, String path, boolean extraProcess, ThreadMode threadMode) {
+        return new ActionWrapper(actionClass, path, extraProcess, threadMode);
     }
 }
