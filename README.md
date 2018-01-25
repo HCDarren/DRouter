@@ -13,29 +13,29 @@
 
 **2.** 作为一个多模块的路由通信库，相信它已支持了所有跨模块通信的使用场景，功能介绍如下：
 
-    (1) 支持依赖注入，可单独作为依赖注入框架使用
+&emsp;&emsp;(1) 支持依赖注入，可单独作为依赖注入框架使用
 
-    (2) 支持线程切换和调度（原始线程，主线程，同步，异步）
+&emsp;&emsp;(2) 支持线程切换和调度（原始线程，主线程，同步，异步）
 
-    (3) 支持多模块工程下的所有跨模块通信使用场景
+&emsp;&emsp;(3) 支持多模块工程下的所有跨模块通信使用场景
 
-    (4) 支持添加多个拦截器，可根据优先级自定义拦截顺序
+&emsp;&emsp;(4) 支持添加多个拦截器，可根据优先级自定义拦截顺序
 
-    (5) 支持权限和网络检测、登录拦截跳转和数据埋点等功能
+&emsp;&emsp;(5) 支持权限和网络检测、登录拦截跳转和数据埋点等功能
 
 **3.** 阅读了大量的开源库源码，本库的所有代码思想都来自其中，很感激这些大牛的开源和分享精神：
 
-    [(1) ARouter](https://github.com/alibaba/ARouter)
+&emsp;&emsp;[(1) ARouter](https://github.com/alibaba/ARouter)
 
-    [(2) butterknife](https://github.com/JakeWharton/butterknife)
+&emsp;&emsp;[(2) butterknife](https://github.com/JakeWharton/butterknife)
 
-    [(3) okhttp](https://github.com/square/okhttp)
+&emsp;&emsp;[(3) okhttp](https://github.com/square/okhttp)
 
-    [(4) EventBus](https://github.com/greenrobot/EventBus)
+&emsp;&emsp;[(4) EventBus](https://github.com/greenrobot/EventBus)
 
-    [(5) RxJava](https://github.com/ReactiveX/RxJava)
+&emsp;&emsp;[(5) RxJava](https://github.com/ReactiveX/RxJava)
 
-    [(6) retrofit](https://github.com/square/retrofit)
+&emsp;&emsp;[(6) retrofit](https://github.com/square/retrofit)
 
 #### **2. DRouter 基本使用**
 1. 在需要跨模块通信的Module中添加依赖和配置
