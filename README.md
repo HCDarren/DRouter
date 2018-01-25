@@ -54,7 +54,19 @@
         annotationProcessor project(':drouter-compiler')
     }
 ```
-2. 在 Module 中创建需要执行的 Action
+2. 初始化 SDK
+```
+public class BaseApplication extends Application{
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        // 开启 debug
+        DRouter.openDebug();
+        // 初始化且只能初始化一次，参数必须是 Application
+        DRouter.getInstance().init(this);
+    }
+}
+3. 在 Module 中创建需要执行的 Action
 ```
 // path 必须是以在 gradle 中配置的 moduleName + "/" 开头，否则编译通不过。
 // threadMode 支持 POSTING 、MAIN、BACKGROUND、ASYNC 默认情况下是 POSTING（原始线程）
@@ -71,18 +83,6 @@ public class LoginAction implements IRouterAction {
     }
 }
 ```
-3. 初始化 SDK
-```
-public class BaseApplication extends Application{
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        // 开启 debug
-        DRouter.openDebug();
-        // 初始化且只能初始化一次，参数必须是 Application
-        DRouter.getInstance().init(this);
-    }
-}
 ```
 4. 可在任意 Module 中执行跳转
 ```
