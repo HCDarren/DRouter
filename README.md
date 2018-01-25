@@ -5,37 +5,37 @@
 
 **1.** 该库所涉及到的类大概在 30 个左右，源码并不多相信我们都能读懂里面的内容，这里罗列一下源码中所涉及到的一些知识点：
 
-**(1) 编译时注解自动生成 Module、Action 和 Intercepter**
+(1) 编译时注解自动生成 Module、Action 和 Intercepter
 
-**(2) 线程、线程池、线程同步异步和 Handler**
+(2) 线程、线程池、线程同步异步和 Handler
 
-**(3) 责任链模式、享元模式、策略模式、模板模式 ...**
+(3) 责任链模式、享元模式、策略模式、模板模式 ...
 
 **2.** 作为一个多模块的路由通信库，相信它已支持了所有跨模块通信的使用场景，功能介绍如下：
 
-**(1) 支持依赖注入，可单独作为依赖注入框架使用**
+(1) 支持依赖注入，可单独作为依赖注入框架使用
 
-**(2) 支持线程切换和调度（原始线程，主线程，同步，异步）**
+(2) 支持线程切换和调度（原始线程，主线程，同步，异步）
 
-**(3) 支持多模块工程下的所有跨模块通信使用场景**
+(3) 支持多模块工程下的所有跨模块通信使用场景
 
-**(4) 支持添加多个拦截器，可根据优先级自定义拦截顺序**
+(4) 支持添加多个拦截器，可根据优先级自定义拦截顺序
 
-**(5) 支持权限和网络检测、登录拦截跳转和数据埋点等功能**
+(5) 支持权限和网络检测、登录拦截跳转和数据埋点等功能
 
 **3.** 阅读了大量的开源库源码，本库的所有代码思想都来自其中，很感激这些大牛的开源和分享精神：
 
-**[(1) ARouter](https://github.com/alibaba/ARouter)**
+[(1) ARouter](https://github.com/alibaba/ARouter)
 
-**[(2) butterknife](https://github.com/JakeWharton/butterknife)**
+[(2) butterknife](https://github.com/JakeWharton/butterknife)
 
-**[(3) okhttp](https://github.com/square/okhttp)**
+[(3) okhttp](https://github.com/square/okhttp)
 
-**[(4) EventBus](https://github.com/greenrobot/EventBus)**
+[(4) EventBus](https://github.com/greenrobot/EventBus)
 
-**[(5) RxJava](https://github.com/ReactiveX/RxJava)**
+[(5) RxJava](https://github.com/ReactiveX/RxJava)
 
-**[(6) retrofit](https://github.com/square/retrofit)**
+[(6) retrofit](https://github.com/square/retrofit)
 
 #### **2. DRouter 基本使用**
 1. 在需要跨模块通信的Module中添加依赖和配置
