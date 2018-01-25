@@ -66,6 +66,7 @@ public class BaseApplication extends Application{
         DRouter.getInstance().init(this);
     }
 }
+```
 3. 在 Module 中创建需要执行的 Action
 ```
 // path 必须是以在 gradle 中配置的 moduleName + "/" 开头，否则编译通不过。
@@ -82,7 +83,6 @@ public class LoginAction implements IRouterAction {
         return new RouterResult.Builder().success().object(100).build();
     }
 }
-```
 ```
 4. 可在任意 Module 中执行跳转
 ```
