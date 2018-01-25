@@ -105,7 +105,7 @@ DRouter.getInstance()
 
                     @Override
                     public void onResult(RouterResult result) {
-                        // 注意该方法任何时候都会执行在主线程中
+                        // 注意该方法的执行线程是由 Action 的 threadMode 决定的，也就是说和 Action 在同一个线程
                         Log.e("TAG", "result = " + result.toString());
                     }
                 });
@@ -138,7 +138,7 @@ public class CircleInterceptor implements ActionInterceptor {
 ```
 
 #### **3. 其他**
-1. 简书详细介绍地址：xxxx
+1. 简书详细介绍地址：https://www.jianshu.com/p/d0e1320704e4
 2. 视频详细讲解地址：周日晚八点
 
 
