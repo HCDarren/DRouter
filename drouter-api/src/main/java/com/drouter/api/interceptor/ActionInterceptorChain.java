@@ -27,6 +27,7 @@ public class ActionInterceptorChain implements ActionInterceptor.ActionChain {
     public void onInterrupt() {
         isInterrupt = true;
         actionPost.actionCallback.onInterrupt();
+        actionPost.releasePendingPost();
     }
 
     @Override

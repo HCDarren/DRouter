@@ -47,7 +47,7 @@ public final class ActionPost {
         return new ActionPost(actionWrapper, context, params, actionCallback);
     }
 
-    void releasePendingPost() {
+    public void releasePendingPost() {
         this.context = null;
         this.actionWrapper = null;
         this.next = null;
