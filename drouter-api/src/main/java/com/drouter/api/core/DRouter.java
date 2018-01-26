@@ -55,7 +55,6 @@ public class DRouter {
         logger.showLog(true);
 
         logger.d(Consts.TAG, "DRouter openDebug");
-        logger.d(Consts.TAG, "DRouter showLog");
     }
 
     private volatile static DRouter instance = null;
