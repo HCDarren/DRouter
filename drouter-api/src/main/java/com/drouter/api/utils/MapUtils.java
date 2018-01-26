@@ -1,5 +1,7 @@
 package com.drouter.api.utils;
 
+import com.drouter.api.interceptor.ActionInterceptor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +14,8 @@ import java.util.Map;
  */
 public class MapUtils {
 
-    public static List<Class<?>> getInterceptorClasses(Map<Integer, Class<?>> map) {
-        List<Class<?>> list = new ArrayList();
+    public static List<ActionInterceptor> getInterceptorClasses(Map<Integer, ActionInterceptor> map) {
+        List<ActionInterceptor> list = new ArrayList();
 
         for (Object key : map.keySet()) {
             list.add(map.get(key));

@@ -123,23 +123,25 @@ public class DRouter {
                     for (String interceptorGroup : interceptorGroups) {
                         if (interceptorGroup.contains(Consts.ROUTER_INTERCEPTOR_GROUP_PREFIX)) {
                             IRouterInterceptor routerInterceptor = (IRouterInterceptor) Class.forName(interceptorGroup).newInstance();
-                            List<Class<? extends ActionInterceptor>> interceptorClasses = routerInterceptor.getInterceptors();
-                            for (int i = interceptorClasses.size()-1; i >= 0; i--) {
-                                Class<? extends ActionInterceptor> interceptorClass = interceptorClasses.get(i);
+                            List<ActionInterceptor> interceptorClasses = routerInterceptor.getInterceptors();
+                            for (int i = interceptorClasses.size() - 1; i >= 0; i--) {
+                                ActionInterceptor interceptor = interceptorClasses.get(i);
                                 // 自定义拦截器没有实现 ActionInterceptor
-                                if (!ActionInterceptor.class.isAssignableFrom(interceptorClass)) {
-                                    String message = interceptorClass.getCanonicalName() + " must be implements ActionInterceptor.";
-                                    debugMessage(message);
+                                if (!(interceptor instanceof ActionInterceptor)) {
+                                    String message = interceptor.getClass().getCanonicalName() + " must be implements ActionInterceptor.";
+                                    logger.e(Consts.TAG, message);
                                     continue;
                                 }
 
                                 // 添加到拦截器链表
-                                interceptors.add(interceptorClass.newInstance());
+                                interceptors.add(interceptor);
                             }
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    String message = "Instance interceptor error: " + e.getMessage();
+                    logger.e(Consts.TAG, message);
                 }
 
                 // 3. 最后添加 Action 执行调用的拦截器

@@ -104,7 +104,7 @@ public class InterceptorProcessor extends AbstractProcessor {
             // 添加到集合
             interceptors.put(priority, interceptorClassName);
 
-            constructorMethodBuilder.addStatement("this.interceptors.put(" + priority + ",$T.class)", ClassName.bestGuess(interceptorClassName));
+            constructorMethodBuilder.addStatement("this.interceptors.put(" + priority + ",new $T())", ClassName.bestGuess(interceptorClassName));
         }
 
         // 实现方法
