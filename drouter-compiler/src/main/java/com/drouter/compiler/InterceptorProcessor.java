@@ -25,6 +25,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 
@@ -39,12 +40,15 @@ public class InterceptorProcessor extends AbstractProcessor {
     private Elements mElementUtils;
     private Filer mFiler;
     private final String KEY_MODULE_NAME = "moduleName";
+    private TypeMirror iInterceptor = null;
+    private String moduleName = null;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
         mFiler = processingEnvironment.getFiler();
         mElementUtils = processingEnvironment.getElementUtils();
+        iInterceptor = mElementUtils.getTypeElement(Consts.ACTIONINTERCEPTOR).asType();
     }
 
     @Override
@@ -80,7 +84,7 @@ public class InterceptorProcessor extends AbstractProcessor {
 
         // 构造函数
         MethodSpec.Builder constructorMethodBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
-        constructorMethodBuilder.addStatement("interceptors = new $T<>()",ClassName.get("java.util","TreeMap"));
+        constructorMethodBuilder.addStatement("interceptors = new $T<>()", ClassName.get("java.util", "TreeMap"));
 
         // 2. 解析到所有的 Action 信息
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(Interceptor.class);
@@ -96,6 +100,11 @@ public class InterceptorProcessor extends AbstractProcessor {
             Element enclosingElement = element.getEnclosingElement();
             String packageName = mElementUtils.getPackageOf(enclosingElement).getQualifiedName().toString();
             String interceptorClassName = packageName + "." + element.getSimpleName();
+
+            // 判断 Interceptor 注解类是否实现了 ActionInterceptor
+            if (!((TypeElement) element).getInterfaces().contains(iInterceptor)) {
+                error(element, "%s verify failed, @Interceptor must be implements %s", element.getSimpleName().toString(), Consts.ACTIONINTERCEPTOR);
+            }
 
             if (interceptors.containsKey(priority)) {
                 // 输出错误，拦截器优先级 冲突重复了

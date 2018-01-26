@@ -24,6 +24,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 
@@ -38,12 +39,14 @@ public class ModuleProcessor extends AbstractProcessor {
     private Elements mElementUtils;
     private Filer mFiler;
     private final String KEY_MODULE_NAME = "moduleName";
+    private TypeMirror iRouterAction = null;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
         mFiler = processingEnvironment.getFiler();
         mElementUtils = processingEnvironment.getElementUtils();
+        iRouterAction = mElementUtils.getTypeElement(Consts.ROUTERACTION).asType();
     }
 
     @Override
@@ -95,7 +98,7 @@ public class ModuleProcessor extends AbstractProcessor {
 
         // 构造函数
         MethodSpec.Builder constructorMethodBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
-        constructorMethodBuilder.addStatement("actions = new $T<>()",ClassName.bestGuess("java.util.HashMap"));
+        constructorMethodBuilder.addStatement("actions = new $T<>()", ClassName.bestGuess("java.util.HashMap"));
 
         // 2. 解析到所有的 Action 信息
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(Action.class);
@@ -118,6 +121,11 @@ public class ModuleProcessor extends AbstractProcessor {
             String packageName = mElementUtils.getPackageOf(enclosingElement).getQualifiedName().toString();
             String actionClassName = packageName + "." + element.getSimpleName();
 
+            // 判断 Interceptor 注解类是否实现了 ActionInterceptor
+            if (!((TypeElement) element).getInterfaces().contains(iRouterAction)) {
+                error(element, "%s verify failed, @Action must be implements %s", element.getSimpleName().toString(), Consts.ROUTERACTION);
+            }
+
             if (modules.containsKey(actionName)) {
                 // 输出错误，Action 名称冲突重复了
                 error(element, "%s module name already exists", actionName);
@@ -126,7 +134,7 @@ public class ModuleProcessor extends AbstractProcessor {
             modules.put(actionName, actionClassName);
 
             constructorMethodBuilder.addStatement("this.actions.put($S,$T.build($T.class, $S, "
-                             + actionAnnotation.extraProcess() + ", $T." + actionAnnotation.threadMode() + "))",
+                            + actionAnnotation.extraProcess() + ", $T." + actionAnnotation.threadMode() + "))",
                     actionName, actionWrapperClassName, ClassName.bestGuess(actionClassName), actionName, threadModeClassName);
         }
 

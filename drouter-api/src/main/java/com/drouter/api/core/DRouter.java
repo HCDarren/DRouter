@@ -126,13 +126,6 @@ public class DRouter {
                             List<ActionInterceptor> interceptorClasses = routerInterceptor.getInterceptors();
                             for (int i = interceptorClasses.size() - 1; i >= 0; i--) {
                                 ActionInterceptor interceptor = interceptorClasses.get(i);
-                                // 自定义拦截器没有实现 ActionInterceptor
-                                if (!(interceptor instanceof ActionInterceptor)) {
-                                    String message = interceptor.getClass().getCanonicalName() + " must be implements ActionInterceptor.";
-                                    logger.e(Consts.TAG, message);
-                                    continue;
-                                }
-
                                 // 添加到拦截器链表
                                 interceptors.add(interceptor);
                             }
