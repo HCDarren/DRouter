@@ -1,7 +1,7 @@
 # Android 平台多模块多组件开发的路由库
 
 
-#### **一.基本介绍**
+### **一. DRouter 基本介绍**
 
 **1.** 该库所涉及到的类大概在 30 个左右，源码并不多相信我们都能读懂里面的内容，这里罗列一下源码中所涉及到的一些知识点：
 
@@ -37,7 +37,7 @@
 
 &emsp;&emsp;[(6) retrofit](https://github.com/square/retrofit)
 
-#### **2. DRouter 基本使用**
+### **二. DRouter 基本使用**
 1. 在需要跨模块通信的Module中添加依赖和配置
 ```
     defaultConfig {
@@ -137,7 +137,7 @@ public class CircleInterceptor implements ActionInterceptor {
 }
 ```
 
-#### **3. 其他**
+### **三. 其他**
 1. 简书详细介绍地址：https://www.jianshu.com/p/d0e1320704e4
 2. 视频详细讲解地址：周日晚八点
 
