@@ -2,12 +2,10 @@ package com.drouter.api.core;
 
 import android.content.Context;
 
-import com.drouter.api.action.IRouterAction;
 import com.drouter.api.extra.ActionWrapper;
-import com.drouter.api.interceptor.ActionInterceptorChain;
 import com.drouter.api.interceptor.ActionInterceptor;
+import com.drouter.api.interceptor.ActionInterceptorChain;
 import com.drouter.api.result.ActionCallback;
-import com.drouter.api.result.RouterResult;
 import com.drouter.api.thread.ActionPost;
 import com.drouter.base.ThreadMode;
 
@@ -40,7 +38,7 @@ public class RouterForward {
         return this;
     }
 
-    public RouterForward(ActionWrapper actionWrapper, List<ActionInterceptor> interceptors) {
+    RouterForward(ActionWrapper actionWrapper, List<ActionInterceptor> interceptors) {
         this.mActionWrapper = actionWrapper;
         mParams = new HashMap<>();
         this.interceptors = interceptors;
@@ -76,10 +74,6 @@ public class RouterForward {
      */
     public ThreadMode getThreadMode() {
         return mThreadMode == null ? mActionWrapper.getThreadMode() : mThreadMode;
-    }
-
-    private RouterResult invokeAction(IRouterAction routerAction) {
-        return routerAction.invokeAction(mContext, mParams);
     }
 
     public RouterForward context(Context context) {
