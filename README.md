@@ -139,6 +139,6 @@ public class CircleInterceptor implements ActionInterceptor {
 
 ### **三. 其他**
 1. 简书详细介绍地址：https://www.jianshu.com/p/d0e1320704e4
-2. 视频详细讲解地址：周日晚八点
+2. 视频详细讲解地址：https://pan.baidu.com/s/1kWoIA95
 
 
