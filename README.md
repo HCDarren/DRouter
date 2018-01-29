@@ -136,6 +136,10 @@ public class CircleInterceptor implements ActionInterceptor {
     }
 }
 ```
+6.混淆配置
+```
+-keep public class com.drouter.assist.**{*;}
+```
 
 ### **三. 其他**
 1. 简书详细介绍地址：https://www.jianshu.com/p/d0e1320704e4
